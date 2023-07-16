@@ -1,0 +1,3 @@
+<div class="text-center">
+    Calendar - coming soon...
+</div>

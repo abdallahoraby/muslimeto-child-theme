@@ -1,0 +1,408 @@
+<?php  /* template name: acc */ ?>
+<?php get_header();
+$user_id = get_current_user_id();
+$user = wp_get_current_user();
+$staff =  array('administrator','teamleader');
+if(in_array('parent',$user->roles)){
+    $rol='parent';
+    $tab_w = "25%";
+}elseif (in_array('student',$user->roles)) {
+    $rol='student';
+    $tab_w = "50%";
+}elseif ((in_array('teacher',$user->roles))) {
+    $rol='teacher';
+    $tab_w = "20%";
+}else {
+    $rol='staff';
+    $tab_w = "20%";
+}
+?>
+<style media="screen">
+    .toast-message{color:white!important}
+    .pro_info {
+        box-shadow: none!important;
+        background-color: #f1f3f3!important;
+        border: 1px solid #d4d8dd;
+        padding: 1rem;
+    }
+    .tabs_ins ul{width: 100%;margin-bottom:0!important;position: absolute;bottom: 0; }.tabs_ins ul li{margin: 0!important}
+    .tabs_ins ul li a{margin: 0;border-radius: 0!important;text-align: center;padding: 6px 0;background-color: white!important; box-shadow: none!important}
+    .tabs_ins ul li a.active {border-bottom:4px solid #47b3e6!important; }
+    .soc_ul{list-style: none;margin: 0}
+    .soc_ul li{padding: 0px}
+    .soc_ul li i{margin-right: 2px;font-size: 13px;}
+    .cust_border{border-right: 1px solid #e0e0e0;}
+    .mak_down ul li{ padding: 3px; border-radius: 0!important;}
+    @media only screen and (min-width: 750px){
+        .ava_model{width: 713px!important;}
+        .img_cont{ padding-right: 0px; }
+        .pro_info{height: auto;}
+    }
+    @media only screen and (max-width: 700px){
+        .img_cont img{margin:0 auto;display:block;}
+        .cust_border{margin:0 auto;display:block;text-align: center;padding:10px 0;}
+    }
+    .account_wrapper a ,.account_wrapper span,.account_wrapper li ,.account_wrapper input, .account_wrapper button,.account_wrapper label,.account_wrapper p,.account_wrapper td{font-size: 14px!important}
+    .account_wrapper h4,.account_wrapper th,.account_wrapper legend{font-size: 14px!important}
+    .nav-link.active span ,.nav-link.active i {color: white;}
+    .account_wrapper .nav-link{padding: 4px 13px;}
+    .account_wrapper label{text-transform: uppercase;}
+    .nav-pills li a i{display: none}
+    #page-account-settings{min-height: 600px;}
+    .middle_im {
+        transition: .5s ease;
+        opacity: 0;
+        position: relative;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    .middle_im div{
+        font-size: 16px;
+        display: block;
+        cursor: pointer;
+        position: absolute;
+        right: -9px;
+        bottom: 5px;
+    }
+    .img_cont img {
+        opacity: 1;
+        transition: .5s ease;
+        backface-visibility: hidden;
+        border-radius: 6px;
+        margin: 0 auto;
+        display: block;
+    }
+    .img_cont:hover img {
+        opacity: 0.5;
+    }
+    .img_cont:hover .middle_im {
+        opacity: 1;
+    }
+    .u_time_zone{
+        display: block;
+        font-size: 14px;
+    }
+    .rol_bad{text-transform: capitalize;background-color:#49bb88;padding:2px 5px}
+    .not_choice{max-width: 65%}
+    .not_heading{display: block;width: 20%;margin-top: 3px!important;}
+    .g_noti_head{width: 100%;margin: 0;margin-bottom: 10px;font-weight: bold;}
+    input[type="checkbox"] {  cursor: pointer!important;}
+    .checkbox input:checked ~ label:after {
+        top: 9px!important;
+    }
+    .checkbox input:checked ~ label:before {
+        top: 3px!important;
+    }
+    .checkbox label:after {
+        top: 3px!important;
+    }
+    .ff_item:hover{background-color:#47b3e6!important;}
+    .mult_sel{width: 200px!important}
+
+    .makeup-balance {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .mak_down{
+        width: 100%;
+    }
+
+    ul#list-tab {
+        margin: 0;
+        padding: 0;
+    }
+
+    li.list-group-item.list-group-item-action.active.text-center.ff_item {
+        color: #fff;
+        box-shadow: 0 0.125rem 0.25rem rgb(147 158 170 / 40%);
+        border-radius: 5px !important;
+    }
+
+    .middle_im {
+        transition: .5s ease;
+        opacity: 1;
+        position: relative;
+        transform: translate(-20%, 0);
+        -ms-transform: translate(0, 0);
+        text-align: center;
+        margin-top: 7px;
+    }
+</style>
+<!-- <div class="header-navbar-shadow"></div> -->
+<!-- BEGIN: Content-->
+<?php// var_dump(get_all_notification_checked('announcements','email')) ;
+?>
+<!-- <a href="javascript:void(0)" class="asdasdasd">asdasdasd</a> -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<div class="app-content content" style="margin:0;padding:10px;min-width:100%;">
+    <!-- <div class="content-overlay"></div> -->
+    <div class="content-wrapper account_wrapper" style="margin:0">
+        <div class="content-body">
+            <div class="pro_info card">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 img_cont">
+                            <?php echo get_avatar( $user->ID, 100 ); ?>
+                            <div class="middle_im" data-toggle="modal" data-target="#model_img">
+                                <div class="text"><i class="fas fa-edit text-secondary"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12 cust_border">
+                            <h6 style="margin-bottom: 0;display:inline-block"><?php echo $user->first_name. ' ' . $user->last_name?></h6>
+                            <small class="badge badge-pill badge-success rol_bad" style="font-size:11px"><?php echo $rol ?></small>
+                            <div class="u_time_zone">
+                                <i class="fas fa-clock"></i>
+                                <?php
+                                //echo do_shortcode('[memb_date format="g:sA e"]');?>
+                                <?php
+                                $u_date = do_shortcode('[memb_date date=off]');
+                                $u_time_zone = explode(" ",$u_date)[5] ;
+                                $tz=timezone_open($u_time_zone);
+                                $dateTimeOslo=date_create("now",timezone_open($u_time_zone));
+                                $gmt = timezone_offset_get($tz,$dateTimeOslo)/60/60;
+                                $gmt_strt = strtotime($gmt);
+                                echo datum(true,$gmt)  . ' ' . '('.$u_time_zone. ')' ;
+
+                                ?>
+                            </div>
+                            <!-- <hr style="margin:0"> -->
+                            <ul class="soc_ul">
+                                <li class="text-muted"><i class="fa fa-phone text-success"></i> <?php echo do_shortcode('[memb_contact fields=Phone1]') ?></li>
+                                <li class="text-muted"> <i class="fa fa-envelope text-danger"></i> <?php echo do_shortcode('[memb_contact fields=Email]') ?></li>
+                                <li class="text-muted"> </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <!-- <ul class="soc_ul">
+                               <li class="text-muted"><i class="fa fa-phone text-success"></i> +21212112</li>
+                               <li class="text-muted"> <i class="fa fa-envelope text-danger"></i> asd@dasd.sad</li>
+                               <li class="text-muted"> <i class="fa fa-user-detail"></i>America / New_York (UTC -05:00)</li>
+                               </ul> -->
+                        </div>
+                        <div class="col-md-3 col-xs-12 float-right makeup-balance">
+                            <div class="mak_down">
+                                <ul class="list-group btn btn-primary me-2" id="list-tab" role="tablist">
+                                    <li class="list-group-item list-group-item-action active text-center ff_item">
+                                        <span style="color:white">Makeup Balance</span>
+                                        <span style="color:white"><i class="fa fa-time"></i> <?php $minutes=get_user_meta( $user->ID, 'makeup_balance', true );
+                                            if($minutes):
+                                                $hours = intdiv($minutes, 60) ? intdiv($minutes, 60) : '0'.'h '. ($minutes % 60) .'m'; echo $hours . ' hrs'; else:?>
+                                                0h 0m
+                                            <?php endif; ?>
+                         </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="model_img" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content ava_model">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Change Avatar</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" >
+                                <ul class="nav nav-pills" id="tabContent">
+                                    <li class="active nav-item"><a class="nav-link active" href="#details" data-toggle="pill" aria-selected="true">Upload photo</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#access-security" data-toggle="pill">Make avatar</a></li>
+                                </ul>
+                                <hr>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="details">
+                                        <div class="col-12 px-0 d-flex flex-sm-row flex-column justify-content-start">
+                                            <div class="bp-profile-wrapper">
+                                                <div class="bp-profile-content">
+                                                    <h2 class="screen-heading change-avatar-screen"><?php esc_html_e( 'Change Profile Photo', 'buddypress' ); ?></h2>
+                                                    <?php bp_nouveau_member_hook( 'before', 'avatar_upload_content' ); ?>
+                                                    <?php if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) : ?>
+                                                        <p class="bp-feedback info">
+                                                            <span class="bp-icon" aria-hidden="true"></span>
+                                                            <span class="bp-help-text">
+                                          <?php
+                                          /* Translators: %s is used to output the link to the Gravatar site */
+                                          printf( esc_html__( 'Your profile photo will be used on your profile and throughout the site. If there is a %s associated with your account email we will use that, or you can upload an image from your computer.', 'buddypress' ),
+                                              /* Translators: Url to the Gravatar site, you can use the one for your country eg: https://fr.gravatar.com for French translation */
+                                              '<a href="' . esc_url( __( 'https://gravatar.com', 'buddypress' ) ) . '">Gravatar</a>'
+                                          ); ?>
+                                          </span>
+                                                        </p>
+                                                        <form action="" method="post" id="avatar-upload-form" class="standard-form" enctype="multipart/form-data">
+                                                            <?php if ( 'upload-image' === bp_get_avatar_admin_step() ) : ?>
+                                                                <?php wp_nonce_field( 'bp_avatar_upload' ); ?>
+                                                                <p class="bp-help-text"><?php esc_html_e( "Click below to select a JPG, GIF or PNG format photo from your computer and then click 'Upload Image' to proceed.", 'buddypress' ); ?></p>
+                                                                <p id="avatar-upload">
+                                                                    <label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select an image', 'buddypress' ); ?></label>
+                                                                    <input type="file" name="file" id="file" />
+                                                                    <input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Image', 'buddypress' ); ?>" />
+                                                                    <input type="hidden" name="action" id="action" value="bp_avatar_upload" />
+                                                                </p>
+                                                                <?php if ( bp_get_user_has_avatar() ) : ?>
+                                                                    <p class="bp-help-text"><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddypress' ); ?></p>
+                                                                    <p><a class="button edit" href="<?php bp_avatar_delete_link(); ?>"><?php esc_html_e( 'Delete My Profile Photo', 'buddypress' ); ?></a></p>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
+                                                            <?php if ( 'crop-image' === bp_get_avatar_admin_step() ) : ?>
+                                                                <p class="bp-help-text screen-header"><?php esc_html_e( 'Crop Your New Profile Photo', 'buddypress' ); ?></p>
+                                                                <img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddypress' ); ?>" />
+                                                                <div id="avatar-crop-pane">
+                                                                    <img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Profile photo preview', 'buddypress' ); ?>" />
+                                                                </div>
+                                                                <input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Image', 'buddypress' ); ?>" />
+                                                                <input type="hidden" name="image_src" id="image_src" value="<?php bp_avatar_to_crop_src(); ?>" />
+                                                                <input type="hidden" id="x" name="x" />
+                                                                <input type="hidden" id="y" name="y" />
+                                                                <input type="hidden" id="w" name="w" />
+                                                                <input type="hidden" id="h" name="h" />
+                                                                <?php wp_nonce_field( 'bp_avatar_cropstore' ); ?>
+                                                            <?php endif; ?>
+                                                        </form>
+                                                        <?php
+                                                        /**
+                                                         * Load the Avatar UI templates
+                                                         *
+                                                         * @since 2.3.0
+                                                         */
+                                                        bp_avatar_get_templates();
+                                                        ?>
+                                                    <?php else : ?>
+                                                        <p class="bp-help-text">
+                                                            <?php
+                                                            /* Translators: %s is used to output the link to the Gravatar site */
+                                                            printf( esc_html__( 'Your profile photo will be used on your profile and throughout the site. To change your profile photo, create an account with %s using the same email address as you used to register with this site.', 'buddypress' ),
+                                                                /* Translators: Url to the Gravatar site, you can use the one for your country eg: https://fr.gravatar.com for French translation */
+                                                                '<a href="' . esc_url( __( 'https://gravatar.com', 'buddypress' ) ) . '">Gravatar</a>'
+                                                            ); ?>
+                                                        </p>
+                                                    <?php endif; ?>
+                                                    <?php
+                                                    bp_nouveau_member_hook( 'after', 'avatar_upload_content' );?>
+                                                    <!-- <iframe src="https://mslmcomdev.wpengine.com/members/aish/profile/change-avatar/" width="600" height="500" allow="fullscreen"></iframe> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="access-security">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <?php echo do_shortcode('[svgAvatars]') ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    (function($){
+
+        $('.save_n_pass').on('click', function(e){
+            e.preventDefault();
+            const n_pass = $('.new_pass').val();
+            const o_pass = $('.old_pass').val();
+            $.post('<?php echo admin_url('admin-ajax.php'); ?>', {
+                action: 'change_user_pass',
+                new_pass: n_pass,
+                old_pass: o_pass
+            }, function (response){
+                toastr[response.type](response.message)
+            })
+        });
+
+
+        $(document).on("change",'.checkbox .n_type',function(e) {
+            const val = this.value;
+            const checkBoxes = $('input[value='+val+']').not(this);
+            $(checkBoxes).filter(function () {
+                return !this.disabled;
+            }).prop('checked',  this.checked); });
+
+
+        $('.asdasdasd').on('click', function(e){
+            $.post('<?php echo admin_url('admin-ajax.php'); ?>', {
+                ddd: 'ddd',
+                action: 'hulk_test',
+            }, function (response){
+                console.log(response);
+            })
+
+        });
+        $('.save-change').on('click', function(e){
+            e.preventDefault();
+            const n_type_announcements = [], n_type_newsletter =[], n_type_new_course =[], n_type_new_quiz =[], n_type_new_assignment =[], n_type_course_completed =[], n_type_certificate_awarded =[], n_type_reset_password =[], n_type  = [], n_type_session_reminder = [];
+
+            $("input:checkbox[name=n_type]:checked").each(function(){
+                n_type.push($(this).val());
+            });
+            $("input.n_type_session_reminder:checked").each(function(){
+                n_type_session_reminder.push($(this).val());
+            });
+            $(".n_type_announcements:checked").each(function(){
+                n_type_announcements.push($(this).val());
+            });
+            $(".n_type_newsletter:checked").each(function(){
+                n_type_newsletter.push($(this).val());
+            });
+            $(".n_type_new_course:checked").each(function(){
+                n_type_new_course.push($(this).val());
+            });
+            $(".n_type_new_quiz:checked").each(function(){
+                n_type_new_quiz.push($(this).val());
+            });
+            $(".n_type_new_assignment:checked").each(function(){
+                n_type_new_assignment.push($(this).val());
+            });
+            $(".n_type_course_completed:checked").each(function(){
+                n_type_course_completed.push($(this).val());
+            });
+            $(".n_type_certificate_awarded:checked").each(function(){
+                n_type_certificate_awarded.push($(this).val());
+            });
+            $(".n_type_reset_password:checked").each(function(){
+                n_type_reset_password.push($(this).val());
+            });
+            $.post('<?php echo admin_url('admin-ajax.php'); ?>', {
+                n_type: n_type,
+                n_type_announcements:n_type_announcements,
+                n_type_newsletter:n_type_newsletter,
+                n_type_new_course:n_type_new_course,
+                n_type_new_quiz:n_type_new_quiz,
+                n_type_new_assignment:n_type_new_assignment,
+                n_type_course_completed:n_type_course_completed,
+                n_type_course_completed:n_type_course_completed,
+                n_type_certificate_awarded:n_type_certificate_awarded,
+                n_type_reset_password:n_type_reset_password,
+                n_type_session_reminder:n_type_session_reminder,
+                action: 'account_save_change',
+            }, function (response){
+                toastr[response.type](response.message)
+            })
+
+        });
+
+        $('.mult_sel').select2();
+
+    }(jQuery));
+</script>
+<?php wp_enqueue_script('app-vendor'); ?>
+<?php get_footer() ?>

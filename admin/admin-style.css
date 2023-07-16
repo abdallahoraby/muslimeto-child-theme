@@ -1,0 +1,15 @@
+li#toplevel_page_muslimeto_bb_options img {
+    width: 1.5rem;
+}
+
+.icon_menu img {
+    width: 2rem;
+    margin: 0 1rem;
+}
+
+.icon_menu p {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+

@@ -1,0 +1,3 @@
+<div class="text-center">
+    Policy - coming soon...
+</div>
